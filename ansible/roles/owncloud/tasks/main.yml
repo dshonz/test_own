@@ -1,0 +1,30 @@
+---
+
+- name: Community - Download OwnCloud release
+  get_url:
+    url=http://download.owncloud.org/community/owncloud-10.2.0.tar.bz2
+    dest=/tmp/owncloud-10.2.0.tar.bz2
+    mode=0644
+  tags:
+    - app
+
+- name: create /var/www directory
+  file: dest=/var/www/owncloud state=directory owner=www-data
+  tags:
+    - app
+
+- name: chown owncloud directory
+  command: chdir=/var/www chown -R www-data:www-data owncloud
+  tags:
+    - app
+
+- name: Community - Unpack OwnCloud
+  command: chdir=/var/www tar -xjf /tmp/owncloud-10.2.0.tar.bz2
+  tags:
+    - app
+
+
+- name: update apt
+  command: apt-get update
+
+

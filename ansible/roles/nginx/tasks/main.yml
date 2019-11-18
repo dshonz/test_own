@@ -1,0 +1,51 @@
+---
+# Install the Nginx server
+
+ - name: install nginx
+   apt: name=nginx-extras
+        update_cache=yes
+
+
+ - name: disable default host
+   file: dest=/etc/nginx/sites-enabled/default
+         state=absent
+   notify: nginx reload
+
+ - name: Backup configs
+   shell: /bin/cp -r /etc/nginx /tmp/nginx_backup/
+
+
+ - name: configurate nginx
+   copy: src=ownCloud.conf
+         dest=/etc/nginx/sites-enabled/
+         owner=root
+         group=root
+         mode=0644
+   notify: nginx reload
+
+ - name: validate nginx conf
+   command: nginx -t
+   changed_when: false
+   ignore_errors: yes
+   register: nginx_config_status
+
+ - name: NGINX test status
+   debug:
+    msg: "{{ nginx_config_status.stderr_lines }}"
+
+ - name: NGINX test status
+   debug:
+    msg: "{{ nginx_config_status.rc }}"
+
+ - name: Redeploy
+   shell: /bin/cp -r /tmp/nginx_backup/nginx /etc/
+   when: nginx_config_status.rc != 0
+
+ - name: Service NGINX reload
+   systemd:
+    name: nginx
+    state: reloaded
+    enabled: yes
+    daemon_reload: yes
+   when: nginx_config_status.rc == 0
+

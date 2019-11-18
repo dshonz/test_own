@@ -1,0 +1,35 @@
+---
+
+###php-fpm
+
+#- name: "Add repository for PHP 7.0."
+#  apt_repository: 
+#     repo="ppa:ondrej/php" 
+#     update_cache=yes
+
+
+- name: Install standarnt packet php7-fpm
+  apt: name={{item}}
+       update_cache=yes
+  with_items:
+     - php7.2-fpm
+     - php7.2
+     - php7.2-curl
+     - php7.2-gd
+#     - php-mcrypt
+     - php7.2-mbstring
+     - php7.2-imagick
+     - php7.2-bz2 
+     - php7.2-intl 
+     - php7.2-xml 
+     - php7.2-zip 
+     - php7.2-json
+     - php7.2-ldap
+#     - owncloud-files 
+
+
+#- name: delete default fpm pool
+#  file: dest=/etc/php/7.2/fpm/pool.d/www.conf
+#        state=absent
+#  notify: reload php7.2-fpm
+

@@ -1,0 +1,12 @@
+ 
+- block:
+     - uri:
+         method: POST
+         url: https://127.0.0.1:80/index.php
+         validate_certs: no
+         body: 'install=true&adminlogin=admin&adminpass=password&adminpass-clone=password&directory=%2Fowncloud%2Fdata&dbtype=pgsql&dbuser=postgres&dbpass=&dbpass-clone=&dbname=postgres&dbhost=localhost'
+         follow_redirects: all
+         status_code: 401
+  rescue:
+    - debug:
+        msg: Role execution failed
